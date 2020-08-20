@@ -1,0 +1,44 @@
+---
+
+- name: Set samba_create_home_dirs flag on and keep it persistent across reboots
+  seboolean:
+    name: samba_create_home_dirs
+    state: yes
+    persistent: yes
+  tags: samba
+  
+- name: Set samba_export_all_rw flag on and keep it persistent across reboots
+  seboolean:
+    name: samba_export_all_rw
+    state: yes
+    persistent: yes
+  tags: samba
+  
+- name: Set use_samba_home_dirs  flag on and keep it persistent across reboots
+  seboolean:
+    name: use_samba_home_dirs 
+    state: yes
+    persistent: yes
+  tags: samba
+
+- name: Create share directory
+  file:
+    path: "{{ directory_path }}"
+    state: directory
+  tags: samba
+
+- name: Sets default ACL for user on specific share path
+  acl:
+     path: "{{ directory_path }}"
+     entity: "{{ samba_group }}"
+     etype: group
+     permissions: rwx
+     recursive: yes
+     default: yes
+     state: present
+  tags: samba
+
+#- name: Sets default ACL for user on specific share path
+#  shell: setfacl -R -m g:samba:rwx "{{ directory_path }}"
+#  when: false
+#  tags: samba

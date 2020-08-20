@@ -1,0 +1,28 @@
+---
+
+- name: Include variable
+  include_vars:
+    file: vars.yml
+
+- name: Ensure group "samba" exists
+  group:
+    name: samba
+    state: present
+  tags: samba  
+  
+- name: Add user "{{ user_name }}" with a bash shell, appending the group 'samba' to the user's group 
+  user:  
+    name: "{{ user_name }}"
+    password: "{{ user_password | password_hash('sha512') }}"
+    shell: /bin/bash
+    groups: samba
+    append: yes
+  when: false
+  tags: samba
+  
+
+- name: samba_users | creating samba user passwords
+  shell: "(echo {{ user_smbpasswd }}; echo {{ user_samba_users }}) | smbpasswd -s -a {{ name }}"
+  with_items: "{{ user_samba_users }}"
+  when: false
+  tags: samba

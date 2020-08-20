@@ -1,0 +1,7 @@
+
+- hosts: fedora-servers
+  remote_user: root
+  roles:
+    - samba_uninstall
+
+

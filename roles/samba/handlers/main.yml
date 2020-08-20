@@ -1,0 +1,8 @@
+---
+
+- name: Reloading firewalld rules
+  command: firewall-cmd --reload
+
+- name: Restarting samba service
+  command: systemctl restart nmb smb
+

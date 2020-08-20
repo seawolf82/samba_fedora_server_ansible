@@ -1,0 +1,42 @@
+---
+
+- name: Make sure SMB service is stopped
+  systemd:
+    state: stopped
+    name: smb
+  tags: samba
+  
+- name: Make sure NMB service is stopped
+  systemd:
+    state: stopped
+    name: nmb
+  tags: samba
+
+  
+- name: disable smb service
+  systemd:
+    name: smb
+    enabled: false
+  tags: samba
+  
+  
+- name: disable nmb service
+  systemd:
+    name: nmb
+    enabled: false
+  tags: samba
+  
+  
+- name: removing firewall rules for Samba service
+  firewalld: 
+    service: samba
+    state: disabled
+    permanent: yes
+  notify: Reloading firewalld rules
+  tags: samba
+  
+- name: Recursively remove samba directory
+  file:
+    path: /etc/samba
+    state: absent
+  tags: samba

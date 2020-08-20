@@ -1,0 +1,63 @@
+---
+
+- name: install samba 
+  dnf:
+    name: samba
+    state: present
+  tags: samba
+  
+- name: enable smb service
+  systemd:
+    name: smb
+    enabled: yes
+  tags: samba
+  
+  
+- name: enable nmb service
+  systemd:
+    name: nmb
+    enabled: yes
+  tags: samba
+  
+- name: Make sure SMB service is running
+  systemd:
+    state: started
+    name: smb
+  tags: samba
+  
+- name: Make sure NMB service is running
+  systemd:
+    state: started
+    name: nmb
+  tags: samba
+  
+  
+- name: adding firewall rules for Samba service
+  firewalld: 
+    service: samba
+    permanent: true
+    state: enabled
+  notify: Reloading firewalld rules
+  tags: samba
+  
+- name: Backup smb.conf if it differs from the copied version
+  copy:
+    src: /etc/samba/smb.conf
+    dest: /etc/samba/smb.conf.bck
+    owner: root
+    group: root
+    mode: '0644'
+    remote_src: yes
+    backup: yes
+  tags: samba
+
+- name: Template smb.j2 file to /etc/samba/smb.conf
+  template:
+    src: smb.j2
+    dest: /etc/samba/smb.conf
+    owner: root
+    group: root
+    mode: '0644'
+    validate: 'testparm -s %s'
+  notify: Restarting samba service
+  tags: samba

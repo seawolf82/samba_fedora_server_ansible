@@ -1,0 +1,12 @@
+- name: Include variable
+  include_vars:
+    file: vars.yml
+
+- name: install samba
+  import_tasks: samba.yml
+
+- name: create user
+  import_tasks: create_user.yml
+
+- name: create samba share
+  import_tasks: create_samba_share.yml

@@ -1,0 +1,66 @@
+# See smb.conf.example for a more detailed config file or
+# read the smb.conf manpage.
+# Run 'testparm' to verify the config is correct after
+# you modified it.
+
+[global]
+	workgroup = {{ samba_workgroup }}
+	security = {{ samba_security }}
+	# Server information
+    netbios name = {% if samba_netbios_name is defined %}{{ samba_netbios_name }}
+	{% else %}
+	{{ ansible_hostname }}
+	{% endif %}	
+    server string = {{ samba_server_string }}
+	passdb backend = tdbsam
+
+    # Logging
+    {% if samba_log is defined %}
+    log file = {{ samba_log }}
+     max log size = {{ samba_log_size }}
+     log level = {{ samba_log_level }}
+    {% else %}
+    logging = syslog
+    {% endif %}
+
+	printing = cups
+	printcap name = cups
+	load printers = yes
+	cups options = raw
+
+
+{% if samba_load_share %}
+## Make home directories accessible
+[Dati]
+    comment = Dati Directories
+    path = {{ directory_path }}
+    browseable = Yes
+    read only = No
+    writable = Yes
+    inherit acls = Yes
+    valid users = @samba
+{% endif %}
+
+
+
+[homes]
+	comment = Home Directories
+	valid users = %S, %D%w%S
+	browseable = No
+	read only = No
+	inherit acls = Yes
+
+[printers]
+	comment = All Printers
+	path = /var/tmp
+	printable = Yes
+	create mask = 0600
+	browseable = No
+
+[print$]
+	comment = Printer Drivers
+	path = /var/lib/samba/drivers
+	write list = @printadmin root
+	force group = @printadmin
+	create mask = 0664
+	directory mask = 0775

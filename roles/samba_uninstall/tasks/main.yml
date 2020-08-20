@@ -1,0 +1,12 @@
+- name: Include variable
+  include_vars:
+    file: vars.yml
+
+- name: uninstall samba
+  import_tasks: samba.yml
+
+- name: delete user
+  import_tasks: delete_user.yml
+
+- name: delete samba share
+  import_tasks: delete_samba_share.yml

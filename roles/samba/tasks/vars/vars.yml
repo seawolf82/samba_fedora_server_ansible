@@ -1,0 +1,22 @@
+---
+
+directory_path : /Dati
+user_name: seawolf
+user_password: seawolf
+samba_group: samba
+
+# Samba users variable
+
+user_smbpasswd: seawolf
+name: seawolf
+user_samba_users: seawolf 
+
+# Samba Variable Template
+
+samba_workgroup: 'WORKGROUP'
+samba_security: user
+samba_server_string : 'Sambaserver %m'
+samba_log: /var/log/samba/%m.log
+samba_log_size: 5000
+samba_log_level: 0
+samba_load_share: true

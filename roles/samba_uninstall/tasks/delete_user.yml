@@ -1,0 +1,25 @@
+---
+
+- name: Include variable
+  include_vars:
+    file: vars.yml
+
+- name: Delete group "samba" 
+  group:
+    name: samba
+    state: absent
+  tags: samba  
+
+- name: samba_users | deleting samba user 
+  shell: "smbpasswd -x {{ name }}"
+  with_items: "{{ user_samba_users }}"
+  when: false
+  tags: samba
+  
+- name: Delete user "{{ user_name }}" with a bash shell
+  user:
+    name: "{{ user_name }}"
+    state: absent
+    remove: yes
+  tags: samba 
+  
