@@ -17,12 +17,10 @@
     shell: /bin/bash
     groups: samba
     append: yes
-  when: false
   tags: samba
   
 
 - name: samba_users | creating samba user passwords
   shell: "(echo {{ user_smbpasswd }}; echo {{ user_samba_users }}) | smbpasswd -s -a {{ name }}"
   with_items: "{{ user_samba_users }}"
-  when: false
   tags: samba
