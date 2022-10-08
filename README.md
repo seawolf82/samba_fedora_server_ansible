@@ -19,3 +19,4 @@ upgrade package samba
 For example, to launch only task regarding upgrade os, run:
 
 ansible-playbook -vv --tags "upgrade" -i hosts site.yaml
+
